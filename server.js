@@ -3,6 +3,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const config = require("./config/config");
+const passport = require("passport");
+const User = require("./schema/schemaUser.js");
+const session = require('express-session');
 
 //Depreciation warnings
 mongoose.set('useNewUrlParser', true);
@@ -23,6 +26,12 @@ mongoose
 //On définit notre objet express nommé app
 const app = express();
 
+app.use(session({
+    secret: "Our little secret.",
+    resave: false,
+    saveUninitialized: false
+}));
+
 //Body Parser
 const urlencodedParser = bodyParser.urlencoded({
   extended: true
@@ -30,6 +39,15 @@ const urlencodedParser = bodyParser.urlencoded({
 app.use(urlencodedParser);
 
 app.use(bodyParser.json());
+
+//PASSPORT
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+const LocalStrategy = require('passport-local').Strategy;
+passport.use(new LocalStrategy(User.authenticate()));
 
 //Définition des CORS
 app.use(function(req, res, next) {

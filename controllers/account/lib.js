@@ -1,77 +1,71 @@
 const User = require("../../schema/schemaUser.js");
 const passwordHash = require("password-hash");
+const session = require('cookie-session');
+const passport = require("passport");
+const passportLocalMongoose = require("passport-local-mongoose");
+const express = require("express");
+
+const app = express();
+
+app.use(session({
+    secret: "Our little secret.",
+    resave: false,
+    saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+const LocalStrategy = require('passport-local').Strategy;
+passport.use(new LocalStrategy(User.authenticate()));
 
 //SIGNUP
 async function signup(req, res) {
-  const { password, email } = req.body;
-  if (!email || !password) {
-    //Le cas où l'email ou bien le password ne serait pas soumit ou nul
-    return res.status(400).json({
-      text: "Requête invalide"
+    User.register(new User({ email: req.body.email, username: req.body.username }), req.body.password, function (err, user) {
+            if (err) {
+                res.json({ success: false, message: "Your account could not be saved. Error: " + err });
+            }
+            else {
+                req.login(user, (er) => {
+                    if (er) {
+                        res.json({ success: false, message: er });
+                    }
+                    else {
+                        res.json({ success: true, message: "Your account has been saved" });
+                    }
+                });
+            }
     });
-  }
-  // Création d'un objet user, dans lequel on hash le mot de passe
-  const user = {
-    email,
-    password: passwordHash.generate(password)
-  };
-  // On check en base si l'utilisateur existe déjà
-  try {
-    const findUser = await User.findOne({
-      email
-    });
-    if (findUser) {
-      return res.status(400).json({
-        text: "L'utilisateur existe déjà"
-      });
-    }
-  } catch (error) {
-    return res.status(500).json({ error });
-  }
-  try {
-    // Sauvegarde de l'utilisateur en base
-    const userData = new User(user);
-    const userObject = await userData.save();
-    return res.status(200).json({
-      text: "Succès",
-      token: userObject.getToken()
-    });
-  } catch (error) {
-    return res.status(500).json({ error });
-  }
-}
+};
 
 
 //LOGIN
 async function login(req, res) {
-  const { password, email } = req.body;
-  if (!email || !password) {
-    //Le cas où l'email ou bien le password ne serait pas soumit ou nul
-    return res.status(400).json({
-      text: "Requête invalide"
-    });
-  }
-  try {
-    // On check si l'utilisateur existe en base
-    const findUser = await User.findOne({ email });
-    if (!findUser)
-      return res.status(401).json({
-        text: "L'utilisateur n'existe pas"
-      });
-    if (!findUser.authenticate(password))
-      return res.status(401).json({
-        text: "Mot de passe incorrect"
-      });
-    return res.status(200).json({
-      token: findUser.getToken(),
-      text: "Authentification réussi"
-    });
-  } catch (error) {
-    return res.status(500).json({
-      error
-    });
-  }
-}
+    if (!req.body.username) {
+        res.json({ success: false, message: "Username was not given" })
+    }
+    else if (!req.body.password) {
+        res.json({ success: false, message: "Password was not given" })
+    }
+    else {
+        passport.authenticate("local", function (err, user, info) {
+            if (err) {
+                res.json({ success: false, message: err });
+            }
+            else {
+                if (!user) {
+                    res.json({ success: false, message: "username or password incorrect" });
+                }
+                else {
+                    const token = jwt.sign({ email: user.email, username: user.username }, secretkey, { expiresIn: "24h" });
+                    res.json({ success: true, message: "Authentication successful", token: token });
+                }
+            }
+        })(req, res);
+    }
+};
 
 //On exporte nos deux fonctions
 exports.login = login;
