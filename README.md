@@ -21,8 +21,8 @@ This is a "vanilla" project (no design) but all the hard stuff has been made:
 
 `
 module.exports = {
-    "secret" : "mediumMernAppCreation",
-    "mongoURL": "mongodb+srv://Amaury:Amo!12051998@cluster0.naapg7h.mongodb.net/prograrmortestDB"
+    "secret" : "example-secret",
+    "mongoURL": "mongodb+srv://username:password@cluster0.naapg7h.mongodb.net/nameofDB"
 }
 `
 - Back in cmd: `npm config set legacy-peer-deps true`
