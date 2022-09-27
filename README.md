@@ -21,25 +21,27 @@ This is a "vanilla" project (no design) but all the hard stuff has been made:
 
 ## Make it work for you
 - Download zip, extract anywhere then cd in it
-- Create a config directory with a config.js in it and put your mongoURL and hashing secret in it like this:
+- Create a .env file and put your mongoURL, hashing secret, id and secret of facebook and google apps in it like this:
 
 `
-module.exports = {
-    "secret" : "example-secret",
-    "mongoURL": "mongodb+srv://username:password@cluster0.naapg7h.mongodb.net/nameofDB"
-}
+secret=Example
+mongoURL=mongodb+srv://exampleuser:examplepassword@cluster0.naapg7h.mongodb.net/exampleDB
+FACEBOOK_CLIENT_ID=somenumbersandstuff
+FACEBOOK_CLIENT_SECRET=somenumbersandstuff
+GOOGLE_CLIENT_ID=somenumbersandstuff
+GOOGLE_CLIENT_SECRET=somenumbersandstuff
 `
 - Back in cmd: `npm config set legacy-peer-deps true`
 - `npm install`
+- cd in client
+- `npm install` too
 
 You are all set now:
-- `npm start` in the root directory (to run the API and mongo connection)
+- `npm start` in the root directory (to run the server, API and mongo connection)
 - `npm start` in the client directory (for the front end)
 
 ## Credits
-Everything has been made here : [Credits](https://axel-marciano.medium.com/votre-premi%C3%A8re-application-en-react-node-express-mongodb-5ab0dc531091)
-
-But I had to make it work in 2022
+Amaury Simondet - 2022
 
 ## Got feedback for me?
 
