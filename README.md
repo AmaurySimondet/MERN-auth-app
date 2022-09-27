@@ -25,6 +25,7 @@ This is a "vanilla" project (no design) but all the hard stuff has been made:
 
 `
 secret=Example
+
 mongoURL=mongodb+srv://exampleuser:examplepassword@cluster0.naapg7h.mongodb.net/exampleDB
 FACEBOOK_CLIENT_ID=somenumbersandstuff
 FACEBOOK_CLIENT_SECRET=somenumbersandstuff
