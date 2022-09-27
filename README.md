@@ -24,14 +24,16 @@ This is a "vanilla" project (no design) but all the hard stuff has been made:
 - Create a .env file and put your mongoURL, hashing secret, id and secret of facebook and google apps in it like this:
 
 `
-secret=Example
 
+secret=Example
 mongoURL=mongodb+srv://exampleuser:examplepassword@cluster0.naapg7h.mongodb.net/exampleDB
 FACEBOOK_CLIENT_ID=somenumbersandstuff
 FACEBOOK_CLIENT_SECRET=somenumbersandstuff
 GOOGLE_CLIENT_ID=somenumbersandstuff
 GOOGLE_CLIENT_SECRET=somenumbersandstuff
+
 `
+
 - Back in cmd: `npm config set legacy-peer-deps true`
 - `npm install`
 - cd in client
