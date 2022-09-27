@@ -1,10 +1,11 @@
 const mongoose = require("mongoose");
-const passwordHash = require("password-hash");
-const jwt = require("jwt-simple");
-const config = require("../config/config");
+const findOrCreate = require('mongoose-findorcreate');
+const passportLocalMongoose = require("passport-local-mongoose");
 
 const userSchema = mongoose.Schema(
   {
+    facebookId: { type: String },
+    googleId: { type: String },
     email: {
       type: String,
       lowercase: true,
@@ -12,21 +13,26 @@ const userSchema = mongoose.Schema(
       unique: true,
       required: true
     },
-    password: {
+    fName: {
       type: String,
-      required: true
+      trim: true,
+      required: true,
+      unique: false
+    },
+    lName: {
+      type: String,
+      trim: true,
+      required: true,
+      unique: false
+    },
+    profilePic: {
+      type: String
     }
   },
   { timestamps: { createdAt: "created_at" } }
 );
 
-userSchema.methods = {
-  authenticate: function(password) {
-    return passwordHash.verify(password, this.password);
-  },
-  getToken: function() {
-    return jwt.encode(this, config.secret);
-  }
-};
+userSchema.plugin(passportLocalMongoose, {usernameField: "email"});
+userSchema.plugin(findOrCreate);
 
 module.exports = mongoose.model("User", userSchema);

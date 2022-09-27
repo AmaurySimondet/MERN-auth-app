@@ -1,6 +1,8 @@
 import {React, useState} from "react";
 import { Button, FormGroup, FormControl, FormLabel } from "react-bootstrap";
 import API from "../utils/API";
+import axios from 'axios'
+
 
 function Login () {
   const stateNull = {
@@ -14,19 +16,41 @@ function Login () {
     const { email, password } = state;
 
     if (!email || email.length === 0) {
-      return alert("Wrong email !");
+      return alert("No email given !");
     }
     if (!password || password.length === 0) {
-      return alert("Wrong password !");
+      return alert("No password given !");
     }
     try {
       const { data } = await API.login(email, password);
-      localStorage.setItem("token", data.token);
-      window.location = "/dashboard";
+      if (data.success === true){
+        localStorage.setItem("token", data.token);
+        window.location = "/dashboard";
+      }else{
+        alert(data.message);
+      }
     } catch (error) {
       alert(error);
     }
   };
+
+  async function handleClickFacebook(){
+    try {
+      //Custom API Call
+      window.location = "http://localhost:8800/user/auth/facebook";
+    } catch (error) {
+      alert(error);
+    }
+  }
+
+  async function handleClickGoogle(){
+    try {
+      //Custom API Call
+      window.location = "http://localhost:8800/user/auth/google";
+    } catch (error) {
+      alert(error);
+    }
+  }
 
   function handleChange(event){
     setState(oldState => {
@@ -37,13 +61,17 @@ function Login () {
     });
   };
 
+  function handleClickInscription() {
+    window.location = "/signup"
+  }
+
   return (
       <div className="Login">
         <FormGroup controlId="email">
           <FormLabel>Email</FormLabel>
           <FormControl
             autoFocus
-            type="email"
+            type="text"
             value={state.email}
             onChange={handleChange}
           />
@@ -58,6 +86,15 @@ function Login () {
         </FormGroup>
         <Button onClick={handleClick} block="true" type="submit">
           Connexion
+        </Button>
+        <Button onClick={handleClickFacebook} block="true" type="submit">
+          Connexion avec facebook
+        </Button>
+        <Button onClick={handleClickGoogle} block="true" type="submit">
+          Connexion avec google
+        </Button>
+        <Button onClick={handleClickInscription} block="true" type="submit">
+          Inscription
         </Button>
       </div>
   );

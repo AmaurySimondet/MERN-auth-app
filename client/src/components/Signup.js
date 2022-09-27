@@ -4,6 +4,7 @@ import API from "../utils/API";
 
 function Signup () {
   const stateNull = {
+    username: "",
     email: "",
     password: "",
     cpassword: ""
@@ -12,13 +13,15 @@ function Signup () {
   const [state, setState] = useState(stateNull);
 
   async function handleClick() {
-    const { email, password, cpassword } = state;
+    const { fName, lName, email, password, cpassword } = state;
 
-    if (!email || email.length === 0) return alert("Wrong email !");
-    if (!password || password.length === 0) return alert("Wrong password !");
+    if (!email || email.length === 0) return alert("No email given !");
+    if (!password || password.length === 0) return alert("No password given !");
+    if (!fName || fName.length === 0) return alert("No first name given !");
+    if (!lName || lName.length === 0) return alert("No last name given !");
     if (password !== cpassword) return alert("Passwords missmatch !");
     try {
-      const { data } = await API.signup({ email, password });
+      const { data } = await API.signup({ fName, lName, email, password });
       localStorage.setItem("token", data.token);
       window.location = "/dashboard";
     } catch (error) {
@@ -37,6 +40,24 @@ function Signup () {
 
   return (
       <div className="Login">
+        <FormGroup controlId="fName">
+          <FormLabel>First Name</FormLabel>
+          <FormControl
+            autoFocus
+            type="text"
+            value={state.fName}
+            onChange={handleChange}
+          />
+        </FormGroup>
+        <FormGroup controlId="lName">
+          <FormLabel>Last Name</FormLabel>
+          <FormControl
+            autoFocus
+            type="text"
+            value={state.lName}
+            onChange={handleChange}
+          />
+        </FormGroup>
         <FormGroup controlId="email">
           <FormLabel>Email</FormLabel>
           <FormControl

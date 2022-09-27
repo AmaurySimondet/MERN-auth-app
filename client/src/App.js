@@ -4,7 +4,6 @@ import Dashboard from "./components/Dashboard/Dashboard.js";
 import Login from "./components/Login.js";
 import Signup from "./components/Signup.js";
 import PrivateRoute from "./components/PrivateRoute.js";
-import "./App.css";
 
 function App() {
 
@@ -13,8 +12,8 @@ function App() {
             <Route exact path="/" element={<Login/>} />
             <Route exact path="/signup" element={<Signup/>} />
 
-            <Route path="/dashboard" element={<PrivateRoute/>}>
-                <Route exact path='/dashboard' element={<Dashboard/>}/>
+            <Route path="/dashboard/*" element={<PrivateRoute/>}>
+                <Route exact path='/dashboard/*' element={<Dashboard/>}/>
             </Route>
 
           </Routes>

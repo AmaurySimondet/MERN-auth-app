@@ -22,11 +22,35 @@ export default {
     return axios.post(`${burl}/user/signup`, send, { headers: headers });
   },
 
+  facebook: function() {
+    return axios.get(`${burl}/user/auth/facebook`, { headers: headers })
+  },
+
+  facebookAuthenticate: function() {
+    return axios.get(`${burl}/user/auth/facebook/authenticate`, { headers: headers })
+  },
+
+  google: function() {
+    return axios.get(`${burl}/user/auth/google`, { headers: headers })
+  },
+
+  googleAuthenticate: function() {
+    return axios.get(`${burl}/user/auth/google/authenticate`, { headers: headers })
+  },
+
   isAuth: function() {
-    return localStorage.getItem("token") !== null;
+    return (localStorage.getItem("token") !== null);
+  },
+
+  facebookToken: function() {
+    return axios.get(`${burl}/user/facebookToken`, { headers: headers })
+  },
+
+  googleToken: function() {
+    return axios.get(`${burl}/user/googleToken`, { headers: headers })
   },
 
   logout: function() {
-    localStorage.clear();
+    return axios.get(`${burl}/user/logout`, { headers: headers });
   }
 };

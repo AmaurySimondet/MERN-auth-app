@@ -2,7 +2,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const config = require("./config/config");
+const passport = require("passport");
+const User = require("./schema/schemaUser.js");
+const session = require('express-session');
+const cors = require('cors');
+require('dotenv').config();
 
 //Depreciation warnings
 mongoose.set('useNewUrlParser', true);
@@ -11,7 +15,7 @@ mongoose.set('useCreateIndex', true);
 
 //Connexion à la base de donnée
 mongoose
-  .connect(config.mongoURL, { useNewUrlParser: true, useUnifiedTopology: true  })
+  .connect(process.env.mongoURL, { useNewUrlParser: true, useUnifiedTopology: true  })
   .then(() => {
     console.log("Connected to mongoDB");
   })
@@ -23,6 +27,12 @@ mongoose
 //On définit notre objet express nommé app
 const app = express();
 
+app.use(session({
+    secret: "Our little secret.",
+    resave: false,
+    saveUninitialized: false
+}));
+
 //Body Parser
 const urlencodedParser = bodyParser.urlencoded({
   extended: true
@@ -31,20 +41,17 @@ app.use(urlencodedParser);
 
 app.use(bodyParser.json());
 
-//Définition des CORS
-app.use(function(req, res, next) {
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-Requested-With,content-type"
-  );
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-  );
-  res.setHeader("Access-Control-Allow-Credentials", true);
-  next();
-});
+//PASSPORT
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+const LocalStrategy = require('passport-local').Strategy;
+passport.use(new LocalStrategy(User.authenticate()));
+
+//CORS
+app.use(cors());
 
 //Définition du routeur
 const router = express.Router();
