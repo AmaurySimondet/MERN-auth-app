@@ -8,7 +8,11 @@ This is a "vanilla" project (no design) but all the hard stuff has been made:
 - Back end : 
   - Connection to a Mongo database and schemas
   - Creation of an API to send and receive from React to Node
-
+ 
+- API :
+  - Signup, Login, Logout functions using passport
+  - Signup / Login with facebook and google using passport
+  - Tokens management  
 
 - Front end:
   - Basic Login and Signup React components with forms using bootstrap
