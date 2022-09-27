@@ -24,7 +24,7 @@ This is a "vanilla" project (no design) but all the hard stuff has been made:
 - Create a .env file and put your mongoURL, hashing secret, id and secret of facebook and google apps in it like this:
 
 
-secret=Example
+secret=Example <br />
 mongoURL=mongodb+srv://exampleuser:examplepassword@cluster0.naapg7h.mongodb.net/exampleDB <br />
 FACEBOOK_CLIENT_ID=somenumbersandstuff <br />
 FACEBOOK_CLIENT_SECRET=somenumbersandstuff <br />
